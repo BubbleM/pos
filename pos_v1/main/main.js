@@ -1,5 +1,57 @@
 'use strict';
+function loadAllItems() {
+  return [
+    {
+      barcode: 'ITEM000000',
+      name: '可口可乐',
+      unit: '瓶',
+      price: 3.00
+    },
+    {
+      barcode: 'ITEM000001',
+      name: '雪碧',
+      unit: '瓶',
+      price: 3.00
+    },
+    {
+      barcode: 'ITEM000002',
+      name: '苹果',
+      unit: '斤',
+      price: 5.50
+    },
+    {
+      barcode: 'ITEM000003',
+      name: '荔枝',
+      unit: '斤',
+      price: 15.00
+    },
+    {
+      barcode: 'ITEM000004',
+      name: '电池',
+      unit: '个',
+      price: 2.00
+    },
+    {
+      barcode: 'ITEM000005',
+      name: '方便面',
+      unit: '袋',
+      price: 4.50
+    }
+  ];
+}
 
+function loadPromotions() {
+  return [
+    {
+      type: 'BUY_TWO_GET_ONE_FREE',
+      barcodes: [
+        'ITEM000000',
+        'ITEM000001',
+        'ITEM000005'
+      ]
+    }
+  ];
+}
 /*
 * 打印收据
 * @param carItems [Object] 购物车Car中的商品
@@ -68,5 +120,50 @@ function formatCarItems(carItems, allItems) {
   return  mergeRepeatItem(formatItems);
 }
 
-// console.log(formatCarItems(tags, loadAllItems()));
+/*
+* 返回打折信息里买二送一活动的商品数组
+* 
+* */
+function countItems(info, discounts) {
+  let arr = [];
+  discounts.forEach(item => {
+    if(item.type === info) arr = item.barcodes;
+  });
+  return arr;
+}
 
+/*
+* 返回打折后的数据view model
+* @param formatItems [Object] 格式化后的购物车中的商品数组
+* @param discounts [String] 参与打折活动的商品数组　countItems(info, discounts)获得
+* */
+function discountItems(formatItems, discounts) {
+  discounts.forEach(item => {
+    if(findBarcode(item, formatItems)) {
+      for(let i = 0; i < formatItems.length; i++){
+        formatItems[i].totalPrice = formatItems[i].num * formatItems[i].price;
+        if(formatItems[i].barcode === item){
+          let countNum = Math.floor(formatItems[i].num / 2);
+          formatItems[i].discount = countNum * formatItems[i].price;
+        }
+      }
+    }
+  });
+  return formatItems;
+}
+
+const tags = [
+  'ITEM000001',
+  'ITEM000001',
+  'ITEM000001',
+  'ITEM000001',
+  'ITEM000001',
+  'ITEM000003-2.5',
+  'ITEM000005',
+  'ITEM000005-2',
+];
+
+let formatCarItem = formatCarItems(tags, loadAllItems()); // 格式化后购物车里的商品
+let counts = countItems('BUY_TWO_GET_ONE_FREE', loadPromotions()); // 获得参与打折的商品数组
+let result = discountItems(formatCarItem, counts);
+console.log(result);
