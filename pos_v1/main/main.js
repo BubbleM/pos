@@ -152,6 +152,24 @@ function discountItems(formatItems, discounts) {
   return formatItems;
 }
 
+
+/*
+* 获取总价和折扣价格
+* @param discountItem [Object] 打折后的商品数组
+* */
+function getPrice(discountItem) {
+  let price = {
+    totalPrice: 0,　// 总共价格
+    savePrice: 0 // 节省价格
+  }
+  discountItem.forEach(item => {
+    price.totalPrice += item.totalPrice;
+    if(item.discount) price.savePrice += item.discount;
+  });
+  return price;
+}
+
+
 const tags = [
   'ITEM000001',
   'ITEM000001',
@@ -166,4 +184,5 @@ const tags = [
 let formatCarItem = formatCarItems(tags, loadAllItems()); // 格式化后购物车里的商品
 let counts = countItems('BUY_TWO_GET_ONE_FREE', loadPromotions()); // 获得参与打折的商品数组
 let result = discountItems(formatCarItem, counts);
-console.log(result);
+let prices = getPrice(result);
+console.log(prices);
