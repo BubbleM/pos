@@ -181,8 +181,25 @@ const tags = [
   'ITEM000005-2',
 ];
 
+/*
+* 打印函数
+* @param arrItems [Objcet] 最后格式化的商品信息数组
+* @param price [Object] 价格数组
+* */
+function print(arrItems, price) {
+  let str = '***<没钱赚商店>收据***';
+  arrItems.forEach(item => {
+    str += '\n名称:'+item.name+', 数量:'+item.num+"瓶,单价:"+item.price+'(元), 小计:'+item.num*item.price+"(元)";
+  });
+  str += '\n----------------------';
+  str += '\n总计:' + price.totalPrice + '(元)' +'\n节省:' + price.savePrice + '(元)';
+  str += '\n**********************';
+  return str;
+}
+
 let formatCarItem = formatCarItems(tags, loadAllItems()); // 格式化后购物车里的商品
 let counts = countItems('BUY_TWO_GET_ONE_FREE', loadPromotions()); // 获得参与打折的商品数组
 let result = discountItems(formatCarItem, counts);
 let prices = getPrice(result);
-console.log(prices);
+// console.log(prices);
+console.log(print(result, prices));
