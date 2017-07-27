@@ -62,7 +62,6 @@ function formatCarItems(carItems, allItems) {
 
 /*
 * 返回打折信息里买二送一活动的商品数组
-* 
 * */
 function countItems(info, discounts) {
   let arr = [];
@@ -94,7 +93,7 @@ function discountItems(formatItems, discounts) {
 
 
 /*
-* 获取总价和折扣价格
+* 获取折扣后的总价和节省价格
 * @param discountItem [Object] 打折后的商品数组
 * */
 function getPrice(discountItem) {
@@ -115,11 +114,11 @@ function getPrice(discountItem) {
 * @param arrItems [Objcet] 最后格式化的商品信息数组
 * @param price [Object] 价格数组
 * */
-function print(arrItems, price) {
+function prints(arrItems, price) {
   let str = '***<没钱赚商店>收据***';
   arrItems.forEach(item => {
     if(!item.discount) item.discount = 0;
-    str += '\n名称：'+item.name+'，数量：'+item.num+ item.unit + "，单价："+(item.price).toFixed(2)+'(元)，小计:'+(item.totalPrice-item.discount).toFixed(2)+"(元)";
+    str += '\n名称：'+item.name+'，数量：'+item.num+ item.unit + "，单价："+(item.price).toFixed(2)+'(元)，小计：'+(item.totalPrice-item.discount).toFixed(2)+"(元)";
   });
   str += '\n----------------------';
   str += '\n总计：' + price.totalPrice.toFixed(2) + '(元)' +'\n节省：' + price.savePrice.toFixed(2) + '(元)';
@@ -136,6 +135,6 @@ function printReceipt(tags){
   let counts = countItems('BUY_TWO_GET_ONE_FREE', loadPromotions()); // 获得参与打折的商品数组
   let result = discountItems(formatCarItem, counts);
   let prices = getPrice(result);
-  let str = print(result, prices);
+  let str = prints(result, prices);
   console.log(str);
 }
